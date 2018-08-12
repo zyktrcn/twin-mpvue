@@ -26,20 +26,26 @@
       <div class="weather item" v-if="!modeChange" @click="changeMode">
         <div class="user" v-if="!userChange">
           <div class="icon">
-            <img src="/static/images/home/sunny.png" alt="">
+            <img :src="weather.user ? weather.user.icon : '/static/images/home/sunny.png'" alt="">
           </div>
-          <div class="number">
-            <div>19℃</div>
-            <div>晴</div>
+          <div class="number" v-if="weather.user">
+            <div>{{weather.user.temperature}}℃</div>
+            <div>{{weather.user.weather}}</div>
+          </div>
+          <div class="number" v-if="!weather.user && !finish">
+            <div>你在的地方一定是晴天吧</div>
           </div>
         </div>
-        <div class="partner" v-if="userChange">
+        <div class="partner" v-if="userChange && partner.id">
           <div class="icon">
-            <img src="/static/images/home/sunny.png" alt="">
+            <img  :src="weather.partner ? weather.partner.icon : '/static/images/home/sunny.png'" alt="">
           </div>
-          <div class="number">
-            <div>29℃</div>
-            <div>晴</div>
+          <div class="number" v-if="weather.partner">
+            <div>{{weather.partner.temperature}}℃</div>
+            <div>{{weather.partner.weather}}</div>
+          </div>
+          <div class="number" v-if="!weather.partner && !finish">
+            <div>ta在的地方一定是晴天吧</div>
           </div>
         </div>
       </div>
@@ -49,51 +55,51 @@
             <img src="/static/images/home/normal_grey.png" alt="">
           </div>
           <div class="number">
-            <div>78</div>
+            <div>{{user.mode}}</div>
             <div>情绪值</div>
           </div>
         </div>
-        <div class="partner" v-if="userChange">
+        <div class="partner" v-if="userChange && partner.id">
           <div class="icon">
             <img src="/static/images/home/normal_grey.png" alt="">
           </div>
           <div class="number">
-            <div>88</div>
+            <div>{{partner.mode}}</div>
             <div>情绪值</div>
           </div>
         </div>
       </div>
-      <div class="change"  @click="changeUser">
+      <div class="change" v-if="partner.id"  @click="changeUser">
         <img src="/static/images/home/exchange.png" :class="changeAnimation ? 'changeAnimation' : ''" alt="" v-if="!userChange">
         <img src="/static/images/home/exchange_male.png" :class="changeAnimation ? 'changeAnimation' : ''" alt="" v-if="userChange">
         <img src="/static/images/home/exchange_female.png" alt="" v-if="false">
       </div>
     </div>
     <div class="notes">
-      <div class="item">
-        <div class="date">
-          <div>12</div>
-          <div>周日</div>
+      <div class="item" v-for="(note, index) in notes" :key="index">
+        <div class="date" :class="note.hideDate ? 'hide' : ''">
+          <div>{{note.getDate.day}}</div>
+          <div>{{note.getDate.weekStr}}</div>
         </div>
         <div class="note">
           <div class="info">
-            <div>
-              <div class="title">
-                邓国雄是大傻逼
+            <div :class="note.images.length ? 'max-len' : ''">
+              <div class="title" :class="note.user_id === user.id ? '' : partner.sex ? 'female' : 'male'">
+                {{note.title}}
               </div>
               <div class="content">
-                猴哥猴哥你真了不得
+                {{note.content}}
               </div>
             </div>
-            <img src="" alt="" v-if="false">
+            <img :src="note.images[0]" alt="" mode="aspectFill" v-if="note.images.length">
           </div>
           <div class="addition">
             <div class="time">
-              15:00
+              {{note.getDate.time}}
             </div>
             <div class="location">
               <img src="/static/images/home/location.png" alt="">
-              <div>广州市, 广东省, 中国</div>
+              <div>{{note.location}}</div>
             </div>
           </div>
         </div>
@@ -103,18 +109,46 @@
 </template>
 
 <script>
+import globalStore from '../../stores/global-store'
+
 export default {
+  computed: {
+    user () {
+      return globalStore.state.user
+    },
+    partner () {
+      return globalStore.state.partner
+    },
+    location () {
+      return globalStore.state.location
+    },
+    weather () {
+      return globalStore.state.weather
+    },
+    notes () {
+      return globalStore.state.notes
+    }
+  },
   data () {
     return {
       today: {},
       monthsArr: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
       userChange: false,
       modeChange: false,
-      changeAnimation: false
+      changeAnimation: false,
+      finish: false
     }
   },
   created () {
     this.getToday()
+    globalStore.dispatch('login').then(code => {
+      if (code === 0) {
+        globalStore.dispatch('getLocation').then(data => {
+          this.finish = true
+        })
+        globalStore.dispatch('getNoteList')
+      }
+    })
   },
   methods: {
     getToday () {
@@ -269,6 +303,10 @@ export default {
   color: #AAAAAA;
 }
 
+.item > .hide {
+  visibility: hidden;
+}
+
 .item > .note {
   width: 85%;
   border-top: 1px solid #F1F1F1;
@@ -314,7 +352,7 @@ export default {
 }
 
 .info > img {
-  width: 13rpx;
+  width: 130rpx;
   height: 130rpx;
   margin-left: 29rpx;
   border-radius: 18rpx;
