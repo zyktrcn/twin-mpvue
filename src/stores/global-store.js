@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import lodash from 'lodash'
+import Add from './modules/add.js'
 import { rq, getUserInfo, wxLogin, getUserLocation } from '../api/index.js'
-import { key } from '../api/config.js'
-import { getWeatherIcon, getNoteDate } from './config.js'
+import { key, navigation } from '../api/config.js'
+import { getWeatherIcon, getMode, getNoteDate } from './config.js'
+import { upload } from '../utils/qiniuUploader.js'
 
 Vue.use(Vuex)
 
@@ -18,7 +20,9 @@ export default new Vuex.Store({
   },
   mutations: {
     setLoginInfo: (state, info) => {
+      info.user.modeImg = getMode(info.user.mode)
       state.user = info.user
+      info.partner.modeImg = getMode(info.partner.mode)
       state.partner = info.partner
       state.key = info.key
     },
@@ -35,6 +39,16 @@ export default new Vuex.Store({
         notes[index].hideDate = notes[index].getDate.dateStr === notes[index - 1].getDate.dateStr
       })
       state.notes = notes
+    },
+    navigateTo: (state, to) => {
+      wx.navigateTo({
+        url: `/pages/${navigation[to]}`
+      })
+    },
+    switchTab: (state, to) => {
+      wx.switchTab({
+        url: `/pages/${navigation[to]}`
+      })
     }
   },
   actions: {
@@ -76,7 +90,7 @@ export default new Vuex.Store({
             {
               name: name,
               location: {
-                longitude: value.logitude,
+                longitude: value.longitude,
                 latitude: value.latitude,
                 location: [data.city, data.province, data.country],
                 adcode: parseInt(data.adcode)
@@ -93,17 +107,54 @@ export default new Vuex.Store({
     getNoteList: async ({ commit, state }) => {
       try {
         let listRes = await rq('list', state.key)
-        console.log(listRes)
         if (listRes.code === 0) {
           let data = listRes.data.user.concat(listRes.data.partner)
           data = lodash.orderBy(data, (val) => {
-            return val.date ? val.date : val.created_at
+            return val.date ? val.date : new Date(val.created_at).getTime()
           }, 'desc')
           commit('setNotes', data)
         }
       } catch (err) {
         console.log('catch err:', err)
       }
+    },
+    uploadImg: async ({ commit, state }, images) => {
+      let uploadFunction = (filename, file) => {
+        return new Promise((resolve, reject) => {
+          rq('qiniuToken', Object.assign({ filename }, state.key)).then(res => {
+            if (res.code === 0) {
+              upload(file, data => {
+                resolve(data)
+              }, err => {
+                console.log('qiniuUploader fail:', err)
+                reject(err)
+              }, {
+                region: 'ECN',
+                domain: 'https://airing.ursb.me',
+                key: filename,
+                uptoken: res.data
+              })
+            }
+          }, err => {
+            console.log('fail to get token:', err)
+            reject(err)
+          })
+        })
+      }
+      try {
+        let promiseArr = []
+        for (let i = 0; i < images.length; i++) {
+          let filename = images[i].name
+          let file = images[i].file
+          promiseArr.push(uploadFunction(filename, file))
+        }
+        return await Promise.all(promiseArr)
+      } catch (err) {
+        console.log('catch err:', err)
+      }
     }
+  },
+  modules: {
+    Add
   }
 })

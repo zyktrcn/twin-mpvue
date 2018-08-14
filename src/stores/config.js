@@ -15,6 +15,22 @@ let getWeatherIcon = (weather) => {
   }
 }
 
+let getMode = (mode) => {
+  if (mode >= 0 && mode < 20) {
+    return '/static/images/home/verySad_grey.png'
+  } else if (mode >= 20 && mode < 40) {
+    return '/static/images/home/sad_grey.png'
+  } else if (mode >= 40 && mode < 60) {
+    return '/static/images/home/normal_grey.png'
+  } else if (mode >= 60 && mode < 80) {
+    return '/static/images/home/happy_grey.png'
+  } else if (mode >= 80 && mode <= 100) {
+    return '/static/images/home/veryHappy_grey.png'
+  } else {
+    return '/static/images/home/normal_grey.png'
+  }
+}
+
 let weekStr = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 let getNoteDate = (note) => {
   let date = new Date(note.date || note.created_at)
@@ -30,5 +46,6 @@ let getNoteDate = (note) => {
 
 export {
   getWeatherIcon,
+  getMode,
   getNoteDate
 }

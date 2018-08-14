@@ -52,7 +52,7 @@
       <div class="mode item" v-if="modeChange" @click="changeMode">
         <div class="user" v-if="!userChange">
           <div class="icon">
-            <img src="/static/images/home/normal_grey.png" alt="">
+            <img :src="user.modeImg" alt="">
           </div>
           <div class="number">
             <div>{{user.mode}}</div>
@@ -61,7 +61,7 @@
         </div>
         <div class="partner" v-if="userChange && partner.id">
           <div class="icon">
-            <img src="/static/images/home/normal_grey.png" alt="">
+            <img :src="partner.modeImg" alt="">
           </div>
           <div class="number">
             <div>{{partner.mode}}</div>
@@ -105,6 +105,9 @@
         </div>
       </div>
     </div>
+    <div class="add" @click="goToAdd">
+      <img src="/static/images/home/add.png" alt="">
+    </div>
   </div>
 </template>
 
@@ -141,14 +144,20 @@ export default {
   },
   created () {
     this.getToday()
-    globalStore.dispatch('login').then(code => {
-      if (code === 0) {
-        globalStore.dispatch('getLocation').then(data => {
-          this.finish = true
-        })
-        globalStore.dispatch('getNoteList')
-      }
-    })
+  },
+  mounted () {
+    if (this.user.id) {
+      globalStore.dispatch('getNoteList')
+    } else {
+      globalStore.dispatch('login').then(code => {
+        if (code === 0) {
+          globalStore.dispatch('getLocation').then(data => {
+            this.finish = true
+          })
+          globalStore.dispatch('getNoteList')
+        }
+      })
+    }
   },
   methods: {
     getToday () {
@@ -167,6 +176,9 @@ export default {
       setTimeout(() => {
         this.userChange = !this.userChange
       }, 1000)
+    },
+    goToAdd () {
+      globalStore.commit('navigateTo', 'add')
     }
   }
 }
@@ -373,5 +385,16 @@ export default {
   width: 21.6rpx;
   height: 27rpx;
   margin: 0 20rpx;
+}
+
+.add {
+  position: fixed;
+  right: 36rpx;
+  bottom: 36rpx;
+}
+
+.add > img {
+  width: 128rpx;
+  height: 128rpx;
 }
 </style>
