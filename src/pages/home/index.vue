@@ -151,6 +151,7 @@ export default {
     } else {
       globalStore.dispatch('login').then(code => {
         if (code === 0) {
+          console.log(globalStore.state.key)
           globalStore.dispatch('getLocation').then(data => {
             this.finish = true
           })

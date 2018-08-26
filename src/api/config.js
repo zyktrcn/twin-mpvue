@@ -1,5 +1,5 @@
 
-// domain: 'http://127.0.0.1:3002/',
+// let domain = 'http://127.0.0.1:3002/'
 let domain = 'https://2life.api.ursb.me/'
 let api = {
   login: `${domain}users/wxp_login`,
