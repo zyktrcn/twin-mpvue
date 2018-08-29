@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import lodash from 'lodash'
 import Add from './modules/add.js'
+import Notification from './modules/notification'
 import { rq, getUserInfo, wxLogin, getUserLocation } from '../api/index.js'
 import { key, navigation } from '../api/config.js'
 import { getWeatherIcon, getMode, getNoteDate } from './config.js'
@@ -16,7 +17,8 @@ export default new Vuex.Store({
     key: {},
     location: {},
     weather: {},
-    notes: []
+    notes: [],
+    detailNote: {}
   },
   mutations: {
     setLoginInfo: (state, info) => {
@@ -49,6 +51,9 @@ export default new Vuex.Store({
       wx.switchTab({
         url: `/pages/${navigation[to]}`
       })
+    },
+    getDetailNote: (state, note) => {
+      state.detailNote = note
     }
   },
   actions: {
@@ -155,6 +160,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    Add
+    Add,
+    Notification
   }
 })

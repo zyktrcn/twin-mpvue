@@ -76,7 +76,7 @@
       </div>
     </div>
     <div class="notes">
-      <div class="item" v-for="(note, index) in notes" :key="index">
+      <div class="item" v-for="(note, index) in notes" :key="index" @click="goToDetail(index)">
         <div class="date" :class="note.hideDate ? 'hide' : ''">
           <div>{{note.getDate.day}}</div>
           <div>{{note.getDate.weekStr}}</div>
@@ -180,6 +180,10 @@ export default {
     },
     goToAdd () {
       globalStore.commit('navigateTo', 'add')
+    },
+    goToDetail (index) {
+      globalStore.commit('getDetailNote', this.notes[index])
+      globalStore.commit('navigateTo', 'detail')
     }
   }
 }

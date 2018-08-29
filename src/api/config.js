@@ -7,6 +7,7 @@ let api = {
   qiniuToken: `${domain}utils/qiniu_token`,
   publish: `${domain}notes/publish`,
   update: `${domain}notes/update`,
+  notification: `${domain}users/show_notification`,
   location: 'https://restapi.amap.com/v3/geocode/regeo',
   weather: 'https://restapi.amap.com/v3/weather/weatherInfo'
 }
@@ -17,6 +18,7 @@ let key = {
 let navigation = {
   home: 'home/main',
   add: 'home/add/main',
+  detail: 'home/detail/main',
   notification: 'notification/main',
   profile: 'profile/main'
 }

@@ -5,7 +5,7 @@ export default {
     saved: {}
   },
   getters: {
-    savedNote: state => state.savedNote
+    savedNote: state => state.saved
   },
   mutations: {
     saveNote: (state, note) => {
@@ -19,7 +19,6 @@ export default {
     save: async ({ state, commit, rootState }, note) => {
       commit('saveNote', note)
       try {
-        console.log(Object.assign({}, rootState.key, note))
         let res = await rq(
           note.note_id ? 'update' : 'publish',
           Object.assign({}, rootState.key, note),

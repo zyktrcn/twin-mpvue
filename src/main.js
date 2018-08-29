@@ -14,6 +14,7 @@ export default {
     pages: [
       '^pages/home/main',
       'pages/home/add/main',
+      'pages/home/detail/main',
       'pages/notification/main',
       'pages/profile/main'
     ],
