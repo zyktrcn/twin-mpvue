@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import lodash from 'lodash'
-import Add from './modules/add.js'
+import Note from './modules/note.js'
 import Notification from './modules/notification'
 import { rq, getUserInfo, wxLogin, getUserLocation } from '../api/index.js'
 import { key, navigation } from '../api/config.js'
@@ -17,8 +17,7 @@ export default new Vuex.Store({
     key: {},
     location: {},
     weather: {},
-    notes: [],
-    detailNote: {}
+    notes: []
   },
   mutations: {
     setLoginInfo: (state, info) => {
@@ -35,7 +34,7 @@ export default new Vuex.Store({
     },
     setNotes: (state, notes) => {
       lodash.forEach(notes, (val, index) => {
-        notes[index].images = val.images.split(',')
+        notes[index].images = val.images ? val.images.split(',') : []
         notes[index].getDate = getNoteDate(val)
         if (index === 0) return
         notes[index].hideDate = notes[index].getDate.dateStr === notes[index - 1].getDate.dateStr
@@ -51,9 +50,6 @@ export default new Vuex.Store({
       wx.switchTab({
         url: `/pages/${navigation[to]}`
       })
-    },
-    getDetailNote: (state, note) => {
-      state.detailNote = note
     }
   },
   actions: {
@@ -160,7 +156,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    Add,
+    Note,
     Notification
   }
 })

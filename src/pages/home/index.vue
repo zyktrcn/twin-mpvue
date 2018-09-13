@@ -146,19 +146,6 @@ export default {
     this.getToday()
   },
   mounted () {
-    if (this.user.id) {
-      globalStore.dispatch('getNoteList')
-    } else {
-      globalStore.dispatch('login').then(code => {
-        if (code === 0) {
-          console.log(globalStore.state.key)
-          globalStore.dispatch('getLocation').then(data => {
-            this.finish = true
-          })
-          globalStore.dispatch('getNoteList')
-        }
-      })
-    }
   },
   methods: {
     getToday () {
@@ -184,6 +171,22 @@ export default {
     goToDetail (index) {
       globalStore.commit('getDetailNote', this.notes[index])
       globalStore.commit('navigateTo', 'detail')
+    }
+  },
+  // 小程序生命周期 --onShow
+  onShow () {
+    if (this.user.id) {
+      globalStore.dispatch('getNoteList')
+    } else {
+      globalStore.dispatch('login').then(code => {
+        if (code === 0) {
+          console.log(globalStore.state.key)
+          globalStore.dispatch('getLocation').then(data => {
+            this.finish = true
+          })
+          globalStore.dispatch('getNoteList')
+        }
+      })
     }
   }
 }

@@ -55,7 +55,8 @@ export default {
       images: [],
       title: '',
       content: '',
-      mode: ''
+      mode: '',
+      dateStr: ''
     }
   },
   created () {

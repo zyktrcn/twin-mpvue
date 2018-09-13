@@ -1,8 +1,8 @@
 <template>
 <div class="container">
-  <div v-if="imgArr.lengt > 0">
+  <div v-if="note.images.length > 0">
     <swiper class="swiper" :indicator-dots="indicatorDots" :indicator-color="indicatorColor" :indicator-active-color="indicatorActiveColor" @change="swiperChange" >
-      <block v-for="(item, index) in imgArr"  :key="index">
+      <block v-for="(item, index) in note.images"  :key="index">
         <swiper-item>
           <img :src="item" class="image" mode="aspectFill">
         </swiper-item>
@@ -43,8 +43,8 @@
     </div>
   </div>
   <div class="like" v-if="note.user_id !== user.id">
-    <img src="/static/images/home/like.png" v-if="!note.is_liked">
-    <img src="/static/images/home/liked.png" v-if="note.is_liked" @click="like">
+    <img src="/static/images/home/like.png" v-if="!note.is_liked" @click="like">
+    <img src="/static/images/home/liked.png" v-if="note.is_liked">
   </div>
   <div class="edit-btn" v-if="note.user_id === user.id">
     <div @click="edit">
@@ -64,13 +64,6 @@ import globalStore from '../../../stores/global-store'
 
 export default {
   computed: {
-    imgArr () {
-      if (typeof (this.note.images) === 'string') {
-        return this.note.images.split(',')
-      } else {
-        return this.note.images
-      }
-    },
     date () {
       let date = this.note.date || ''
       return new Date(date).toDateString()
@@ -96,7 +89,7 @@ export default {
       return globalStore.state.user
     },
     note () {
-      return globalStore.state.detailNote
+      return globalStore.getters.detailNote
     }
   },
   data () {
@@ -131,6 +124,7 @@ export default {
     }
   },
   mounted () {
+    console.log(this.note.images)
   },
   methods: {
     swiperChange (e) {
@@ -138,19 +132,26 @@ export default {
     },
     changeMode (mode) {
       this.change = false
+      globalStore.dispatch('save', Object.assign({}, this.note, { mode }))
     },
     setChange () {
       this.change = true
-    }
+    },
     like () {
-
+      console.log('like')
+      globalStore.dispatch('like')
     },
     edit () {
 
     },
     del () {
-      
+
     }
+  },
+  // 小程序生命周期 -- onHide()
+  onUnload () {
+    this.current = 0
+    this.change = false
   }
 }
 </script>
@@ -262,6 +263,17 @@ export default {
   width: 50rpx;
   height: 50rpx;
   margin-right: 30rpx;
+}
+
+.like {
+  position: absolute;
+  right: 43rpx;
+  bottom: 43rpx;
+}
+
+.like > img {
+  width: 116rpx;
+  height: 116rpx;
 }
 
 .edit-btn {
