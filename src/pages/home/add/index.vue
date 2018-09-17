@@ -129,7 +129,7 @@ export default {
       globalStore.dispatch(
         'save',
         {
-          note_id: this.id,
+          id: this.id,
           date: this.date,
           title: this.title,
           content: this.content,
@@ -140,7 +140,6 @@ export default {
           location: globalStore.state.location.user ? globalStore.state.location.user.location.join(', ') : '地球上的某个角落'
         }
       ).then(res => {
-        globalStore.dispatch('getNoteList')
         wx.hideLoading()
         if (res.code !== 0) {
           wx.showToast({
