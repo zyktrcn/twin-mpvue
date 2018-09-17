@@ -70,6 +70,16 @@ export default {
     swiperChange (e) {
       this.current = e.mp.detail.current
     },
+    getSavedNote () {
+      let { id, date, images, title, content, mode } = globalStore.getters.savedNote
+      this.id = id
+      this.date = date
+      this.images = images
+      this.title = title
+      this.content = content
+      this.mode = mode
+      console.log(globalStore.getters.savedNote)
+    },
     uploadImg () {
       if (this.images.length >= 3) return
       wx.chooseImage({
@@ -154,6 +164,10 @@ export default {
       this.images = []
       this.mode = ''
     }
+  },
+  // 小程序生命周期 -- onShow
+  onShow () {
+    this.getSavedNote()
   }
 }
 </script>

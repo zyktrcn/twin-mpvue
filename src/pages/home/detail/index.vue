@@ -138,14 +138,20 @@ export default {
       this.change = true
     },
     like () {
-      console.log('like')
       globalStore.dispatch('like')
     },
     edit () {
-
+      globalStore.commit('saveNote', this.note)
+      globalStore.commit('navigateTo', 'add')
     },
     del () {
-
+      wx.showLoading({
+        title: '正在删除'
+      })
+      globalStore.dispatch('delete').then(res => {
+        wx.hideLoading()
+        wx.navigateBack()
+      })
     }
   },
   // 小程序生命周期 -- onHide()

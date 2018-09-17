@@ -49,6 +49,14 @@ export default {
       } catch (err) {
         console.log('catch err:', err)
       }
+    },
+    delete: async ({ state, commit, rootState }) => {
+      try {
+        let res = await rq('delete', Object.assign({}, rootState.key, { note_id: state.detail.id }))
+        return res
+      } catch (err) {
+        console.log('catch err:', err)
+      }
     }
   }
 }

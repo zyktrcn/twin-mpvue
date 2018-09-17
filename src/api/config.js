@@ -8,6 +8,7 @@ let api = {
   publish: `${domain}notes/publish`,
   update: `${domain}notes/update`,
   like: `${domain}notes/like`,
+  delete: `${domain}notes/delete`,
   notification: `${domain}users/show_notification`,
   location: 'https://restapi.amap.com/v3/geocode/regeo',
   weather: 'https://restapi.amap.com/v3/weather/weatherInfo'
