@@ -3,6 +3,7 @@
 let domain = 'https://2life.api.ursb.me/'
 let api = {
   login: `${domain}users/wxp_login`,
+  getUserInfo: `${domain}users/user`,
   list: `${domain}notes/list`,
   qiniuToken: `${domain}utils/qiniu_token`,
   publish: `${domain}notes/publish`,
@@ -22,7 +23,11 @@ let navigation = {
   add: 'home/add/main',
   detail: 'home/detail/main',
   notification: 'notification/main',
-  profile: 'profile/main'
+  profile: 'profile/main',
+  chart: 'profile/chart/main',
+  match: 'profile/match/main',
+  analysis: 'profile/analysis/main',
+  setting: 'profile/setting/main'
 }
 
 export {

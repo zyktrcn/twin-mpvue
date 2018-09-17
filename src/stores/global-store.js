@@ -27,6 +27,10 @@ export default new Vuex.Store({
       state.partner = info.partner
       state.key = info.key
     },
+    setUserInfo: (state, info) => {
+      state.user = info.user
+      state.partner = info.partner
+    },
     setLocation: (state, { name, location, weather }) => {
       state.location[name] = location
       weather.icon = getWeatherIcon(weather.weather)
@@ -60,6 +64,15 @@ export default new Vuex.Store({
         let loginRes = await rq('login', { code, userInfo }, 'POST')
         commit('setLoginInfo', loginRes.data)
         return loginRes.code
+      } catch (err) {
+        console.log('catch err:', err)
+      }
+    },
+    getUserInfo: async ({ commit, state }) => {
+      try {
+        const info = await rq('getUserInfo', Object.assign({}, state.key, { user_id: state.user.id }))
+        commit('setUserInfo', { user: info.data, partner: info.partner })
+        return info
       } catch (err) {
         console.log('catch err:', err)
       }

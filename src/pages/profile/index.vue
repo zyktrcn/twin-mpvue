@@ -18,12 +18,12 @@
         </div>
         <div class="msg">
           <div class="part">
-            <img :src="smile + icon[user.sex] + '.png'" />
+            <img :src="domain + smile + icon[user.sex] + '.png'" />
             <span class="count">{{user.mode}}</span>
             <span>平局情绪值</span>
           </div>
           <div class="part">
-            <img :src="book + icon[user.sex] + '.png'" />
+            <img :src="domain + book + icon[user.sex] + '.png'" />
             <span class="count">{{user.total_notes}}</span>
             <span>日记数量</span>
           </div>
@@ -44,49 +44,22 @@
         </div>
         <div class="msg">
           <div class="part">
-            <img :src="smile + icon[partner.sex] + '.png'" />
+            <img :src="domain + smile + icon[partner.sex] + '.png'" />
             <span class="count">{{partner.mode}}</span>
             <span>平均情绪值</span>
           </div>
           <div class="part">
-            <img :src="book + icon[partner.sex] + '.png'" />
+            <img :src="domain + book + icon[partner.sex] + '.png'" />
             <span class="count">{{partner.total_notes}}</span>
             <span>日记数量</span>
           </div>
         </div>
       </div>
       <div class="profile">
-        <div class="chart item">
-          <img src="/static/images/profile/chart.png" />
+        <div class="item" v-for="(item, key) in items" :key="key" :class="key" @click="goTo(key)">
+          <img :src="domain + key + '.png'" />
           <div class="text">
-            情绪管理
-          </div>
-          <div class="right">
-            <div class="arrow"></div>
-          </div>
-        </div>
-        <div class="match item">
-          <img src="/static/images/profile/match.png" />
-          <div class="text">
-            匹配
-          </div>
-          <div class="right">
-            <div class="arrow"></div>
-          </div>
-        </div>
-        <div class="analysis item">
-          <img src="/static/images/profile/analysis.png" />
-          <div class="text">
-            人格测试
-          </div>
-          <div class="right">
-            <div class="arrow"></div>
-          </div>
-        </div>
-        <div class="setting item">
-          <img src="/static/images/profile/setting.png" />
-          <div class="text">
-            设置
+            {{item}}
           </div>
           <div class="right">
             <div class="arrow"></div>
@@ -131,13 +104,28 @@ export default {
   data () {
     return {
       hasLogin: true,
-      smile: '/static/images/profile/smile_',
-      book: '/static/images/profile/book_',
-      icon: ['female', 'male']
+      domain: '/static/images/profile/',
+      smile: 'smile_',
+      book: 'book_',
+      icon: ['female', 'male'],
+      items: {
+        chart: '情绪管理',
+        match: '匹配',
+        analysis: '人格测试',
+        setting: '设置'
+      }
     }
   },
   created () {},
-  methods: {}
+  methods: {
+    goTo (key) {
+      globalStore.commit('navigateTo', key)
+    }
+  },
+  // 小程序生命周期 onShow
+  onShow () {
+    globalStore.dispatch('getUserInfo')
+  }
 }
 </script>
 

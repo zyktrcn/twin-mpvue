@@ -16,7 +16,11 @@ export default {
       'pages/home/add/main',
       'pages/home/detail/main',
       'pages/notification/main',
-      'pages/profile/main'
+      'pages/profile/main',
+      'pages/profile/chart/main',
+      'pages/profile/match/main',
+      'pages/profile/analysis/main',
+      'pages/profile/setting/main'
     ],
     tabBar: {
       list: [
