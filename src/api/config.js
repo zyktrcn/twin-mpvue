@@ -10,6 +10,7 @@ let api = {
   update: `${domain}notes/update`,
   like: `${domain}notes/like`,
   delete: `${domain}notes/delete`,
+  feedback: `${domain}users/feedback`,
   notification: `${domain}users/show_notification`,
   location: 'https://restapi.amap.com/v3/geocode/regeo',
   weather: 'https://restapi.amap.com/v3/weather/weatherInfo'
@@ -27,7 +28,10 @@ let navigation = {
   chart: 'profile/chart/main',
   match: 'profile/match/main',
   analysis: 'profile/analysis/main',
-  setting: 'profile/setting/main'
+  setting: 'profile/setting/main',
+  feedback: 'profile/setting/feedback/main',
+  agreement: 'profile/setting/agreement/main',
+  thanks: 'profile/setting/thanks/main'
 }
 
 export {

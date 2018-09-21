@@ -6,7 +6,7 @@
         <switch class="switch" color="#2DC3A6" :checked="recommend" @change="changeRecommend"></switch>
       </div>
     </div>
-    <div class="item" v-for="(item, key) in items" :key="key">
+    <div class="item" v-for="(item, key) in items" :key="key" @click="goTo(key)">
       {{item}}
       <div class="right">
         <div class="arrow"></div>
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import globalStore from '../../../stores/global-store'
 
 export default {
   data () {
@@ -32,6 +33,9 @@ export default {
     changeRecommend () {
       this.recommend = !this.recommend
       wx.setStorageSync('recommend', this.recommend)
+    },
+    goTo (key) {
+      globalStore.commit('navigateTo', key)
     }
   },
   // 小程序生命周期

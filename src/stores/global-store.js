@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import lodash from 'lodash'
 import Note from './modules/note.js'
 import Notification from './modules/notification'
+import Setting from './modules/setting'
 import { rq, getUserInfo, wxLogin, getUserLocation } from '../api/index.js'
 import { key, navigation } from '../api/config.js'
 import { getWeatherIcon, getMode, getNoteDate } from './config.js'
@@ -170,6 +171,7 @@ export default new Vuex.Store({
   },
   modules: {
     Note,
-    Notification
+    Notification,
+    Setting
   }
 })

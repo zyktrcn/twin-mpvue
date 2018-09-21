@@ -20,7 +20,10 @@ export default {
       'pages/profile/chart/main',
       'pages/profile/match/main',
       'pages/profile/analysis/main',
-      'pages/profile/setting/main'
+      'pages/profile/setting/main',
+      'pages/profile/setting/feedback/main',
+      'pages/profile/setting/agreement/main',
+      'pages/profile/setting/thanks/main'
     ],
     tabBar: {
       list: [
